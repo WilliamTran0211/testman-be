@@ -1,0 +1,17 @@
+.dockerignore
+node_modules
+npm-debug.log
+dist
+logs
+src/test
+README.md
+.husky
+.eslintrc.js
+.gitignore
+yarn-error.log
+.prettierrc
+Dockerfile
+Dockerfile.prod
+docker-compose.prod.yml
+docker-compose.yml
+bitbucket-pipelines.yml
