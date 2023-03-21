@@ -1,24 +1,12 @@
 import * as winston from 'winston';
 import { LoggerService, Injectable } from '@nestjs/common';
 import {
-    AccesstransportDailyFile,
-    ActiontransportDailyFile,
-    HTTPtransportsConsole,
-    transportsConsole,
-    setConsoleTransportSilent
+    logFormatDefault,
+    setConsoleTransportSilent,
+    setMaxListenersTranports,
+    TransportsConsoleLogger,
+    TransportsDailyFileLog
 } from './winstonLogger.transports';
-import { transportsCommon } from './winstonLogger.config';
-
-const logFormatDefault = winston.format.combine(
-    winston.format.label({ label: process.env.serviceName || 'name_app' }),
-    winston.format.timestamp({
-        format: transportsCommon.formatDate
-    }),
-    winston.format.errors({ stack: true }),
-    winston.format.json({
-        space: 0 // khoảng trắng vào json, 0 là in ra liền giống JSON.stringtify, còn 2 trở lên là sẽ dễ đọc hơn
-    })
-);
 
 const isTesting = () => process.env?.TEST_ENV == 'true';
 const isProduction = () => process.env?.NODE_ENV?.trim() == 'production';
@@ -26,41 +14,91 @@ const isProduction = () => process.env?.NODE_ENV?.trim() == 'production';
 const isRunningTest = () => {
     if (isTesting()) {
         //set slient and Listeners for console logging
-        transportsConsole.silent = true;
-        HTTPtransportsConsole.silent = true;
-        transportsConsole.setMaxListeners(Infinity);
-        HTTPtransportsConsole.setMaxListeners(Infinity);
+        TransportsConsoleLogger.getConsoleTransportInstance().silent = true;
+        TransportsConsoleLogger.getHTTPConsoleTransportInstance().silent = true;
 
         //set slient and Listeners for transport logging file
-        AccesstransportDailyFile.silent = true;
-        ActiontransportDailyFile.silent = true;
-        AccesstransportDailyFile.setMaxListeners(Infinity);
-        ActiontransportDailyFile.setMaxListeners(Infinity);
+        TransportsDailyFileLog.getAccessLogFileInstance().silent = true;
+        TransportsDailyFileLog.getActionLogFileInstance().silent = true;
+
+        setMaxListenersTranports();
     }
 };
+
+const WinstonLoggerCreated = (contextName: string, transports: any) => {
+    const loggerInstance = winston.createLogger({
+        defaultMeta: { service: contextName },
+        format: logFormatDefault,
+        transports: transports
+    });
+
+    return loggerInstance;
+};
+
 // https://github.com/winstonjs/winston
 @Injectable()
 export class WinstonLogger implements LoggerService {
+    private static instance: WinstonLogger;
     private winston;
     private contextName;
     constructor() {
         isRunningTest();
-        this.winston = winston.createLogger({
-            format: logFormatDefault,
-            defaultMeta: { service: this.contextName },
-            transports: [transportsConsole, ActiontransportDailyFile]
-        });
+
+        this.winston = WinstonLoggerCreated(this.contextName, [
+            TransportsConsoleLogger.getConsoleTransportInstance(),
+            TransportsDailyFileLog.getActionLogFileInstance()
+        ]);
+
+        setMaxListenersTranports();
 
         if (isProduction()) {
             setConsoleTransportSilent();
         }
     }
+
+    public static getInstance(): WinstonLogger {
+        // Singleton instance
+        if (!WinstonLogger.instance) {
+            WinstonLogger.instance = new WinstonLogger();
+        }
+        return WinstonLogger.instance;
+    }
+
+    addTransport(isHttp = false) {
+        const myInstance = WinstonLogger.getInstance();
+
+        if (isHttp) {
+            myInstance.winston.add(
+                TransportsConsoleLogger.getHTTPConsoleTransportInstance()
+            );
+            myInstance.winston.add(
+                TransportsDailyFileLog.getAccessLogFileInstance()
+            );
+        } else {
+            myInstance.winston.add(
+                TransportsConsoleLogger.getConsoleTransportInstance()
+            );
+            myInstance.winston.add(
+                TransportsDailyFileLog.getActionLogFileInstance()
+            );
+        }
+    }
+
     setContextName(contextName) {
         this.contextName = contextName;
     }
 
-    clear() {
+    clear(clearTransportsName?: string) {
+        console.log('Clear');
         this.winston.clear();
+
+        if (!clearTransportsName) {
+            console.log('addding');
+            this.addTransport();
+        } else if (clearTransportsName.toUpperCase() === 'HTTP') {
+            console.log('addding HTTP');
+            this.addTransport(true);
+        }
     }
 
     // 0
@@ -95,11 +133,10 @@ export class WinstonLogger implements LoggerService {
 
     // 3
     http(message: any, key?: string) {
-        const httpWinstonLog = winston.createLogger({
-            format: logFormatDefault,
-            defaultMeta: { service: this.contextName },
-            transports: [HTTPtransportsConsole, AccesstransportDailyFile]
-        });
+        const httpWinstonLog = WinstonLoggerCreated(this.contextName, [
+            TransportsConsoleLogger.getHTTPConsoleTransportInstance(),
+            TransportsDailyFileLog.getAccessLogFileInstance()
+        ]);
 
         httpWinstonLog.log({
             level: 'info',
@@ -242,6 +279,6 @@ export const ResponseFormating = (
         action_result: action_result || undefined,
         req_url: response.originalUrl,
         req_domain: response.hostname,
-        service_code: 'idt'
+        service_code: ''
     };
 };
