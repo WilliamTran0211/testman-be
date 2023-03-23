@@ -5,6 +5,8 @@ import { ConfigModule } from '@nestjs/config';
 import { envFilePath } from 'src/config/envFilePath';
 import { WinstonLoggerModule } from 'src/logger/winstonLogger.module';
 import { SampleModule } from './sample.module';
+import { PrismaService } from 'src/services/prisma.service';
+import { UserModule } from './user.module';
 
 @Module({
     imports: [
@@ -12,13 +14,15 @@ import { SampleModule } from './sample.module';
             ...envFilePath
         }),
         WinstonLoggerModule,
-        SampleModule
+        SampleModule,
+        UserModule
     ],
     providers: [
         {
             provide: APP_FILTER,
             useClass: AllExceptionFilter
-        }
+        },
+        PrismaService
     ]
 })
 export class AppModule {}
