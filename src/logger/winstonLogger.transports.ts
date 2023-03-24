@@ -2,7 +2,7 @@ import * as winston from 'winston';
 import * as DailyRotateFile from 'winston-daily-rotate-file';
 import {
     colors,
-    AccessLogtransportDailyFileConfig,
+    AccessLogTransportDailyFileConfig,
     transportDailyFileConfig,
     transportHTTPConfig,
     transportsCommon,
@@ -12,7 +12,7 @@ import {
 winston.addColors(colors);
 
 const logFormatConsole = winston.format.combine(
-    winston.format.label({ label: process.env.serviceName || 'name_app' }),
+    winston.format.label({ label: process.env.SERVICE_NAME || 'name_app' }),
     winston.format.colorize({ all: true }),
     winston.format.timestamp({
         format: transportsCommon.formatDate
@@ -24,7 +24,7 @@ const logFormatConsole = winston.format.combine(
 );
 
 const logFormatFile = winston.format.combine(
-    winston.format.label({ label: process.env.serviceName || 'name_app' }),
+    winston.format.label({ label: process.env.SERVICE_NAME || 'name_app' }),
     winston.format.errors({ stack: true }),
     winston.format.timestamp({
         format: transportsCommon.formatDate
@@ -48,18 +48,18 @@ const ActionDailyRotateFile = {
 };
 
 const AccessDailyRotateFile = {
-    silent: AccessLogtransportDailyFileConfig.silent,
-    filename: AccessLogtransportDailyFileConfig.filename,
-    datePattern: AccessLogtransportDailyFileConfig.datePattern,
+    silent: AccessLogTransportDailyFileConfig.silent,
+    filename: AccessLogTransportDailyFileConfig.filename,
+    datePattern: AccessLogTransportDailyFileConfig.datePattern,
     zippedArchive: false,
-    maxSize: AccessLogtransportDailyFileConfig.maxSize,
-    maxFiles: AccessLogtransportDailyFileConfig.maxFiles,
+    maxSize: AccessLogTransportDailyFileConfig.maxSize,
+    maxFiles: AccessLogTransportDailyFileConfig.maxFiles,
     json: true,
     handleExceptions: false
 };
 
 export const transportHttp = new winston.transports.Http({
-    // phuong thuc POST
+    // POST Method
     format: logFormatFile,
     silent: transportHTTPConfig.silent,
     host: transportHTTPConfig.host,
@@ -67,7 +67,7 @@ export const transportHttp = new winston.transports.Http({
     path: transportHTTPConfig.path
 });
 
-export const setMaxListenersTranports = () => {
+export const setMaxListenersTransports = () => {
     TransportsConsoleLogger.getConsoleTransportInstance().setMaxListeners(
         Infinity
     );
@@ -84,36 +84,36 @@ export const setConsoleTransportSilent = () => {
 };
 
 export const logFormatDefault = winston.format.combine(
-    winston.format.label({ label: process.env.serviceName || 'name_app' }),
+    winston.format.label({ label: process.env.SERVICE_NAME || 'name_app' }),
     winston.format.timestamp({
         format: transportsCommon.formatDate
     }),
     winston.format.errors({ stack: true }),
     winston.format.json({
-        space: 0 // khoảng trắng vào json, 0 là in ra liền giống JSON.stringtify, còn 2 trở lên là sẽ dễ đọc hơn
+        space: 0 // 0 is json stringify, 2 is easy to read
     })
 );
 
 export class TransportsConsoleLogger {
     // Singleton for transport
-    private static consoleTransportIntance;
-    private static httpConsoleTransportIntance;
+    private static consoleTransportInstance;
+    private static httpConsoleTransportInstance;
 
     public static getConsoleTransportInstance() {
-        if (!TransportsConsoleLogger.consoleTransportIntance) {
-            TransportsConsoleLogger.consoleTransportIntance =
+        if (!TransportsConsoleLogger.consoleTransportInstance) {
+            TransportsConsoleLogger.consoleTransportInstance =
                 new winston.transports.Console({
                     format: logFormatConsole,
                     level: transportsConsoleConfig.level,
                     handleExceptions: false
                 });
         }
-        return TransportsConsoleLogger.consoleTransportIntance;
+        return TransportsConsoleLogger.consoleTransportInstance;
     }
 
     public static getHTTPConsoleTransportInstance() {
-        if (!TransportsConsoleLogger.httpConsoleTransportIntance) {
-            TransportsConsoleLogger.httpConsoleTransportIntance =
+        if (!TransportsConsoleLogger.httpConsoleTransportInstance) {
+            TransportsConsoleLogger.httpConsoleTransportInstance =
                 new winston.transports.Console({
                     format: winston.format.combine(
                         winston.format.colorize({ all: true }),
@@ -129,7 +129,7 @@ export class TransportsConsoleLogger {
                     handleExceptions: false
                 });
         }
-        return TransportsConsoleLogger.httpConsoleTransportIntance;
+        return TransportsConsoleLogger.httpConsoleTransportInstance;
     }
 }
 

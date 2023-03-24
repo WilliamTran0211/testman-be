@@ -3,7 +3,7 @@ import { LoggerService, Injectable } from '@nestjs/common';
 import {
     logFormatDefault,
     setConsoleTransportSilent,
-    setMaxListenersTranports,
+    setMaxListenersTransports,
     TransportsConsoleLogger,
     TransportsDailyFileLog
 } from './winstonLogger.transports';
@@ -13,15 +13,15 @@ const isProduction = () => process.env?.NODE_ENV?.trim() == 'production';
 
 const isRunningTest = () => {
     if (isTesting()) {
-        //set slient and Listeners for console logging
+        //set silent and Listeners for console logging
         TransportsConsoleLogger.getConsoleTransportInstance().silent = true;
         TransportsConsoleLogger.getHTTPConsoleTransportInstance().silent = true;
 
-        //set slient and Listeners for transport logging file
+        //set silent and Listeners for transport logging file
         TransportsDailyFileLog.getAccessLogFileInstance().silent = true;
         TransportsDailyFileLog.getActionLogFileInstance().silent = true;
 
-        setMaxListenersTranports();
+        setMaxListenersTransports();
     }
 };
 
@@ -49,7 +49,7 @@ export class WinstonLogger implements LoggerService {
             TransportsDailyFileLog.getActionLogFileInstance()
         ]);
 
-        setMaxListenersTranports();
+        setMaxListenersTransports();
 
         if (isProduction()) {
             setConsoleTransportSilent();
@@ -93,10 +93,10 @@ export class WinstonLogger implements LoggerService {
         this.winston.clear();
 
         if (!clearTransportsName) {
-            console.log('addding');
+            console.log('adding');
             this.addTransport();
         } else if (clearTransportsName.toUpperCase() === 'HTTP') {
-            console.log('addding HTTP');
+            console.log('adding HTTP');
             this.addTransport(true);
         }
     }
@@ -217,7 +217,7 @@ export const SimpleLogFormatting = (request: any) => {
     };
 };
 
-export const RequestFormating = (request: any) => {
+export const RequestFormatting = (request: any) => {
     const fullUrl =
         request.protocol + '://' + request.get('host') + request.originalUrl;
 
@@ -254,7 +254,7 @@ export const RequestFormating = (request: any) => {
     };
 };
 
-export const ResponseFormating = (
+export const ResponseFormatting = (
     response: any,
     data: any,
     action_result: any

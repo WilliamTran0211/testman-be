@@ -31,7 +31,7 @@ export const transportDailyFileConfig = {
     json: true
 };
 
-export const AccessLogtransportDailyFileConfig = {
+export const AccessLogTransportDailyFileConfig = {
     silent: false, // bật tắt logs
     filename: `${accessLogDir}/%DATE%.log`,
     datePattern: dateFormat.everyDay,
