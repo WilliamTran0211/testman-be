@@ -1,0 +1,19 @@
+model Permission {
+    id          Int      @id @default(autoincrement())
+    name        String
+    resources   String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdById Int
+    updatedById Int
+    createdBy   User     @relation(name: "CreatedUser", fields: [createdById], references: [id])
+    updatedBy   User     @relation(name: "UpdatedUser", fields: [updatedById], references: [id])
+
+    @@map("permisstions")
+}
+
+model User {
+    id                Int          @id
+    permissionCreated Permission[] @relation(name: "CreatedUser")
+    permissionUpdated Permission[] @relation(name: "UpdatedUser")
+}

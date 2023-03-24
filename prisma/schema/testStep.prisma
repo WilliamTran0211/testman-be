@@ -1,0 +1,22 @@
+model TestStep {
+    id          Int      @id @default(autoincrement())
+    name        String
+    description String
+    order       Int
+    content     String
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+    createdById Int
+    updatedById Int
+    createdBy   User     @relation(name: "CreatedUser", fields: [createdById], references: [id])
+    updatedBy   User     @relation(name: "UpdatedUser", fields: [updatedById], references: [id])
+
+    @@map("test_steps")
+}
+
+model User {
+    id              Int        @id
+    testStepCreated TestStep[] @relation(name: "CreatedUser")
+    testStepUpdated TestStep[] @relation(name: "UpdatedUser")
+}
+

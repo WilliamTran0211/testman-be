@@ -1,0 +1,43 @@
+model TestCase {
+    id             Int      @id @default(autoincrement())
+    name           String
+    description    String
+    estimate       String
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    preConditionId String
+    expectResult   String
+    outcome        Boolean
+    createdById    Int
+    updatedById    Int
+    assigneeId     Int
+    assignerId     Int
+    projectId      Int
+    stateId        Int
+    assignee       User     @relation(name: "AssigneeUser", fields: [assigneeId], references: [id])
+    assigner       User     @relation(name: "AssignerUser", fields: [assignerId], references: [id])
+    createdBy      User     @relation(name: "CreatedUser", fields: [createdById], references: [id])
+    updatedBy      User     @relation(name: "UpdatedUser", fields: [updatedById], references: [id])
+    project        Project  @relation(name: "TestCaseProject", fields: [projectId], references: [id])
+    state          State    @relation(name: "TestCaseState", fields: [stateId], references: [id])
+
+    @@map("test_cases")
+}
+
+model User {
+    id               Int        @id
+    testCaseAssignee TestCase[] @relation(name: "AssigneeUser")
+    testCaseAssigner TestCase[] @relation(name: "AssignerUser")
+    testCaseCreated  TestCase[] @relation(name: "CreatedUser")
+    testCaseUpdated  TestCase[] @relation(name: "UpdatedUser")
+}
+
+model Project {
+    id       Int        @id
+    testCase TestCase[] @relation(name: "TestCaseProject")
+}
+
+model State {
+    id            Int        @id
+    testCaseState TestCase[] @relation(name: "TestCaseState")
+}
