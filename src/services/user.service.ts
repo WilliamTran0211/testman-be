@@ -9,12 +9,6 @@ export class UserService {
         return this.prisma.user.findMany();
     }
     async create() {
-        return this.prisma.user.create({
-            data: {
-                username: 'long2',
-                email: 'nguyenlong2@gmail.com',
-                status: 'active'
-            }
-        });
+        return {};
     }
 }
