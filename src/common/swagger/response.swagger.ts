@@ -1,9 +1,10 @@
 import { HttpStatus } from '@nestjs/common';
+import { Type } from '@nestjs/common/interfaces';
 import { errorMessage } from 'src/common/enums/errorMessage';
 import { successMessage } from 'src/common/enums/successMessage';
 
 export const swaggerResponse = {
-    createSuccess: (type: any, isArray?: boolean) => {
+    createSuccess: (type: Type, isArray?: boolean) => {
         return {
             status: HttpStatus.CREATED,
             type,
@@ -11,7 +12,7 @@ export const swaggerResponse = {
             isArray: !!isArray
         };
     },
-    getSuccess: (type: any, isArray?: boolean) => {
+    getSuccess: (type: Type, isArray?: boolean) => {
         return {
             status: HttpStatus.OK,
             type,

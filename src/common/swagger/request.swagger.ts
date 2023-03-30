@@ -43,9 +43,9 @@ export const swaggerRequest = {
             type: 'object',
             default: {
                 email: 'longnt@nexondv.com',
+                fullName: 'Nguyễn Thanh Long',
                 password: 'StrongPassword!1',
-                passwordConfirm: 'StrongPassword!1',
-                name: 'Nguyễn Thanh Long'
+                confirmPassword: 'StrongPassword!1'
             }
         }
     },
@@ -91,6 +91,15 @@ export const swaggerRequest = {
             default: {
                 refreshToken:
                     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MzViNWExMGU0NGI1NGM1NGIwODU3MmIiLCJlbWFpbCI6ImxvbmdudEBuZXhvbmR2LmNvbSIsImlhdCI6MTY2OTYxMTM3MiwiZXhwIjoxNjY5NjI5MzcxfQ.U--ioD6e9tQvROO7WICoxYHwA9J0faUkQ87wZqB9LUs'
+            }
+        }
+    },
+    inputRole: {
+        schema: {
+            type: 'object',
+            default: {
+                name: 'ADMIN',
+                permissions: [1, 2, 3, 4, 5]
             }
         }
     }
