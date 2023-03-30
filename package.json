@@ -19,24 +19,13 @@
         "test:cov": "jest --coverage",
         "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
         "test:e2e": "jest --config ./test/jest-e2e.json",
-        "prismix": "npx prismix && prisma format && prisma generate",
-        "migration": "npx prisma migrate dev --name migration"
-    },
-    "lint-staged": {
-        "*.ts": [
-            "yarn lint",
-            "yarn format",
-            "git add ."
-        ]
+        "prepare": "husky install"
     },
     "dependencies": {
-        "@apollo/server": "^4.5.0",
-        "@nestjs/apollo": "^11.0.3",
         "@nestjs/axios": "^1.0.0",
         "@nestjs/common": "^9.0.0",
         "@nestjs/config": "^2.2.0",
         "@nestjs/core": "^9.0.0",
-        "@nestjs/graphql": "^11.0.0",
         "@nestjs/jwt": "^10.0.2",
         "@nestjs/platform-express": "^9.0.0",
         "@nestjs/swagger": "^6.1.2",
@@ -51,9 +40,7 @@
         "class-transformer": "^0.5.1",
         "class-validator": "^0.14.0",
         "cookie-parser": "^1.4.6",
-        "graphql": "^16.6.0",
         "pg": "^8.10.0",
-        "prisma-class-generator": "^0.2.5",
         "reflect-metadata": "^0.1.13",
         "rimraf": "^3.0.2",
         "rxjs": "^7.2.0",
@@ -63,6 +50,9 @@
         "winston-daily-rotate-file": "^4.7.1"
     },
     "devDependencies": {
+        "@commitlint/cli": "^17.4.2",
+        "@commitlint/config-conventional": "^17.4.2",
+        "@digitalroute/cz-conventional-changelog-for-jira": "^8.0.0",  
         "@nestjs/cli": "^7.5.1",
         "@nestjs/schematics": "^9.0.0",
         "@nestjs/testing": "^9.1.4",
@@ -76,14 +66,32 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^4.0.0",
         "jest": "28.1.3",
-        "prettier": "^2.3.2",
+        "prettier": "^2.5.1",
         "source-map-support": "^0.5.20",
         "supertest": "^6.1.3",
         "ts-jest": "28.0.8",
         "ts-loader": "^9.2.3",
         "ts-node": "^10.0.0",
+        "husky": "^8.0.3",
         "tsconfig-paths": "4.1.0",
+        "lint-staged": "^13.1.0",
+        "commitizen": "^4.2.6",
+        "commitlint-plugin-ignore-subject-issues": "^0.1.1",
+        "cz-conventional-changelog": "^3.3.0", 
         "typescript": "^4.7.4"
+    },
+    "config": {
+        "commitizen": {
+          "path": "./.cz-config.js",
+          "jiraLocation": "pre-description"
+        }
+      },  
+    "lint-staged": {
+        "*.ts": [
+            "yarn lint",
+            "yarn format",
+            "git add ."
+        ]
     },
     "jest": {
         "moduleFileExtensions": [
