@@ -20,5 +20,6 @@ export enum errorMessage {
     IMAGE_REQUIRED = 'Image is required',
     CONFIRM_NOT_MATCH = 'Password confim not match',
     ML_DOWN = 'Machine Learning is down',
-    ML_ERROR = 'Machine Learning server error'
+    ML_ERROR = 'Machine Learning server error',
+    NOT_FOUND_PERMISSION = 'Permission not found'
 }

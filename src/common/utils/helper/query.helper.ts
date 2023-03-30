@@ -1,4 +1,4 @@
-import { DIR } from '../../enums/field';
+import { ORDER } from '../../enums/field';
 
 // search function: field search and search key
 export const search = (searchField: string[] | string, searchKey?: string) => {
@@ -18,7 +18,7 @@ export const search = (searchField: string[] | string, searchKey?: string) => {
 //sort function: order is field sorting and dir is direction of sorting
 export const sort = (order?: string, dir?: string) => {
     const sort = {};
-    if (order && dir) sort[order] = dir == DIR.DESC ? -1 : 1;
+    if (order && dir) sort[order] = dir == ORDER.DESC ? -1 : 1;
     return sort;
 };
 

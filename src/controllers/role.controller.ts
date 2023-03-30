@@ -1,0 +1,65 @@
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Get,
+    HttpStatus,
+    Post,
+    Req,
+    Res,
+    ValidationPipe
+} from '@nestjs/common';
+import {
+    ApiBadRequestResponse,
+    ApiBody,
+    ApiCreatedResponse,
+    ApiInternalServerErrorResponse,
+    ApiTags
+} from '@nestjs/swagger';
+import { errorMessage } from 'src/common/enums/errorMessage';
+import { swaggerRequest } from 'src/common/swagger/request.swagger';
+import { swaggerResponse } from 'src/common/swagger/response.swagger';
+import { RoleInputDTO } from 'src/dtos/role.dto';
+import { PermissionsService } from 'src/services/permissions.service';
+import { RolesService } from 'src/services/roles.service';
+
+@ApiTags('Role')
+@Controller('role')
+export class RolesController {
+    constructor(
+        private readonly rolesService: RolesService,
+        private readonly permissionsService: PermissionsService
+    ) {}
+    @Post()
+    @ApiBody(swaggerRequest.inputRole)
+    @ApiCreatedResponse(swaggerResponse.createSuccess(String))
+    @ApiBadRequestResponse(swaggerResponse.badRequest())
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async create(
+        @Req() request,
+        @Res() response,
+        @Body(new ValidationPipe({ transform: true }))
+        body: RoleInputDTO
+    ) {
+        const { name, description, permissions } = body;
+        const permissionsInfo = await this.permissionsService.getByIds({
+            ids: permissions
+        });
+        if (
+            !permissionsInfo ||
+            permissionsInfo.length === 0 ||
+            permissionsInfo.length !== permissions.length
+        ) {
+            throw new BadRequestException(errorMessage.NOT_FOUND_PERMISSION);
+        }
+        const createdRole = await this.rolesService.create({
+            data: {
+                name,
+                description,
+                permissions: permissionsInfo,
+                createdBy: request.user
+            }
+        });
+        return response.status(HttpStatus.OK).json({ info: createdRole });
+    }
+}
