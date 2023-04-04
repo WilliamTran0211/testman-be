@@ -16,7 +16,7 @@ import {
     ApiInternalServerErrorResponse,
     ApiTags
 } from '@nestjs/swagger';
-import { errorMessage } from 'src/common/enums/errorMessage';
+import { errorMessage } from 'src/common/enums/errorMessage.enum';
 import { swaggerRequest } from 'src/common/swagger/request.swagger';
 import { swaggerResponse } from 'src/common/swagger/response.swagger';
 import { RoleInputDTO } from 'src/dtos/role.dto';

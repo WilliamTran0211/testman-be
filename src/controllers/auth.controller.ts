@@ -10,7 +10,7 @@ import {
     ValidationPipe
 } from '@nestjs/common';
 import { Post } from '@nestjs/common/decorators/http/request-mapping.decorator';
-import { errorMessage } from 'src/common/enums/errorMessage';
+import { errorMessage } from 'src/common/enums/errorMessage.enum';
 import { LoginDTO, SignupDTO } from 'src/dtos/user.dto';
 import { UsersService } from 'src/services/users.service';
 import * as bcrypt from 'bcrypt';

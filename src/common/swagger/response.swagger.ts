@@ -1,6 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { Type } from '@nestjs/common/interfaces';
-import { errorMessage } from 'src/common/enums/errorMessage';
+import { errorMessage } from 'src/common/enums/errorMessage.enum';
 import { successMessage } from 'src/common/enums/successMessage';
 
 export const swaggerResponse = {

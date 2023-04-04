@@ -9,13 +9,13 @@ import {
 import { Column } from 'typeorm/decorator/columns/Column';
 import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
 import { BaseWithCreatedEntityInfo } from './base.created.entity';
-import { Permission } from './permission.entity';
 import { Project } from './project.entity';
 import { State } from './state.entity';
 import { User } from './user.entity';
 
 @Entity()
-export class TestCase extends BaseWithCreatedEntityInfo {
+//export class TestCase extends BaseWithCreatedEntityInfo
+export class TestCase {
     @PrimaryGeneratedColumn({ primaryKeyConstraintName: 'test_case_id' })
     id: number;
     @Column()
@@ -28,18 +28,18 @@ export class TestCase extends BaseWithCreatedEntityInfo {
     expectResult: string;
     @Column({ nullable: true })
     outcome: boolean;
-    @OneToMany(() => User, user => user.id)
-    @JoinColumn()
-    assignee: User;
+    @ManyToMany(() => User, user => user.testCases)
+    @JoinTable({
+        name: 'user_test_case'
+    })
+    assignees: User[];
     @OneToMany(() => User, user => user.id)
     @JoinColumn()
     assigner: User;
     @ManyToOne(() => Project, project => project.id)
     @JoinColumn()
     project: Project;
-    @ManyToOne(() => State, state => state.id)
-    @JoinColumn({
-        name: 'state'
-    })
+    @ManyToOne(() => State, state => state.testCases)
+    @JoinColumn()
     state: State;
 }

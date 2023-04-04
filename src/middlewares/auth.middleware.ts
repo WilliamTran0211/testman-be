@@ -1,5 +1,5 @@
 import { NextFunction, Response } from 'express';
-import { errorMessage } from 'src/common/enums/errorMessage';
+import { errorMessage } from 'src/common/enums/errorMessage.enum';
 import { JwtService } from '@nestjs/jwt';
 import {
     Injectable,
