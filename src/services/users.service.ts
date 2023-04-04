@@ -4,8 +4,9 @@ import {
     USER_FIELD,
     USER_FIELD_WITH_PASSWORD,
     USER_FIELD_WITH_REFRESH_TOKEN
-} from 'src/common/enums/field';
+} from 'src/common/contants/fields.contants';
 import { STATUS } from 'src/common/enums/status';
+import { Role } from 'src/entities/role.entity';
 import { User } from 'src/entities/user.entity';
 import { CreateInterface } from 'src/interfaces/user.interface';
 import { Repository } from 'typeorm';
@@ -55,11 +56,19 @@ export class UsersService {
             select: USER_FIELD_WITH_REFRESH_TOKEN
         });
     }
-    async getAll() {
+    async getAll({
+        searchOptions,
+        filterOptions,
+        relationOptions,
+        selectOptions,
+        paginationOptions
+    }) {
         return await this.usersRepository.find({
-            relations: {
-                role: true
-            }
+            where: { ...searchOptions, ...filterOptions },
+            relations: relationOptions,
+            select: selectOptions,
+            skip: paginationOptions.offset,
+            take: paginationOptions.limit
         });
     }
     async updateRefreshToken({

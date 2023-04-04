@@ -1,11 +1,21 @@
-import { ORDER } from '../../enums/field';
+import { FilterOptions } from 'src/common/types/filter.type';
+import {
+    ORDER,
+    USERS_FILED,
+    USERS_SEARCH_FIELD
+} from '../../enums/fields.enum';
 
 // search function: field search and search key
-export const search = (searchField: string[] | string, searchKey?: string) => {
+export const search = ({
+    searchFields,
+    searchKey
+}: {
+    searchFields: USERS_SEARCH_FIELD[];
+    searchKey: string;
+}) => {
     if (searchKey) {
         const sKey = searchKey.replace(/([?*+[\]\\()|])/g, '');
-        if (typeof searchField == 'string') searchField = [searchField];
-        const search = searchField.map(field => {
+        const search = searchFields.map(field => {
             const searchOptions = {};
             searchOptions[field] = { $regex: new RegExp(sKey), $options: 'i' };
             return searchOptions;
@@ -22,27 +32,45 @@ export const sort = (order?: string, dir?: string) => {
     return sort;
 };
 
-export const filter = (searchField: string, searchKey?: string) => {
-    if (searchKey) {
-        const searchOptions = {};
-        searchOptions[searchField] = searchKey;
-        return searchOptions;
-    }
-    return {};
+export const customFilter = (filterOptions: FilterOptions) => {
+    const filter = {};
+    if (!filterOptions || filterOptions.length === 0) return filter;
+    filterOptions.forEach(filterOption => {
+        const { field, value, isId } = filterOption;
+        const filter = value;
+        if (value && !isId) filter[field] = value;
+        if (value && isId) filter[field] = { id: value };
+    });
+    return filter;
 };
 
-export const pagination = (limit?: string, offset?: string) => {
-    if (limit == null || offset == null) return { limit: 0, offset: 0 };
-    const limitInt = parseInt(Number(limit).toFixed(0));
-    const offsetInt = parseInt(Number(offset).toFixed(0));
-    if (
-        typeof limitInt == 'number' &&
-        typeof offsetInt == 'number' &&
-        offsetInt >= 0 &&
-        limitInt >= 0
-    ) {
-        const paginationOptions = { offset: offsetInt, limit: limitInt };
+export const customSelectedFields = (selectedFields: USERS_FILED[]) => {
+    const selectOptions = { id: true };
+    const relationOptions = {};
+    if (!selectedFields || selectedFields.length === 0)
+        return { selectOptions, relationOptions };
+    selectedFields.forEach(field => {
+        if (field === USERS_FILED.ROLE) relationOptions[field] = true;
+        selectOptions[field] = true;
+    });
+    return { selectOptions, relationOptions };
+};
+
+export const pagination = ({
+    limit,
+    offset
+}: {
+    limit?: number;
+    offset?: number;
+}) => {
+    if (limit == undefined || offset == undefined)
+        return { limit: 0, offset: 0 };
+    if (limit > 0 && offset > 0) {
+        const paginationOptions = {
+            offset: (offset - 1) * limit,
+            limit: limit
+        };
         return paginationOptions;
     }
-    return { limit: 0, offset: 0 };
+    return { offset: 0, limit: 0 };
 };

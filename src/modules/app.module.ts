@@ -7,6 +7,8 @@ import { UsersModule } from './users.module';
 import { JWTCustomModule } from './jwt.module';
 import { AuthModule } from './auth.module';
 import { RolesModule } from './roles.module';
+import { PermissionsModule } from './permissions.module';
+import { TestCasesModule } from './testCases.module';
 
 @Module({
     imports: [
@@ -15,7 +17,9 @@ import { RolesModule } from './roles.module';
         WinstonLoggerModule,
         UsersModule,
         AuthModule,
-        RolesModule
+        RolesModule,
+        PermissionsModule,
+        TestCasesModule
     ],
     providers: [
         {
