@@ -12,8 +12,8 @@ export class RoleInputDTO {
     name: string;
 
     @IsString()
-    @IsOptional()
-    description: string;
+    @IsOptional(null)
+    description?: string;
 
     @IsNotEmpty()
     @IsArray()

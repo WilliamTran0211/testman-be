@@ -7,7 +7,8 @@ import {
     Req,
     Res,
     UnauthorizedException,
-    ValidationPipe
+    ValidationPipe,
+    InternalServerErrorException
 } from '@nestjs/common';
 import { Post } from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
@@ -115,7 +116,7 @@ export class AuthController {
         const defaultRole = await this.roleService.getByName({
             name: ROLE.ADMIN
         });
-        await this.userService.createUser({
+        const result = await this.userService.createUser({
             data: {
                 email,
                 password: hashedPassword,
@@ -123,6 +124,8 @@ export class AuthController {
                 role: defaultRole
             }
         });
+        if (!result)
+            throw new InternalServerErrorException(errorMessage.SERVER_ERROR);
         return response
             .status(HttpStatus.OK)
             .json({ info: successMessage.CREATED });

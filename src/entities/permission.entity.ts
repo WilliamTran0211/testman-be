@@ -9,7 +9,7 @@ export class Permission extends BaseWithCreatedEntityInfo {
     id: number;
     @Column()
     name: string;
-    @Column()
+    @Column({ nullable: true })
     description: string;
     @Column()
     resource: string;

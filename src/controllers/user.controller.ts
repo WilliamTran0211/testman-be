@@ -8,7 +8,6 @@ import {
     ValidationPipe
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { STATUS } from 'src/common/enums/status';
 import {
     customFilter,
     customSelectedFields,
@@ -24,7 +23,6 @@ export class UsersController {
     constructor(private readonly userService: UsersService) {}
     @Get()
     async getUsers(
-        @Req() request,
         @Res() response,
         @Query(new ValidationPipe({ transform: true }))
         query: GetUserQuery
@@ -57,6 +55,6 @@ export class UsersController {
             selectOptions,
             paginationOptions
         });
-        return response.send(users);
+        return response.status(HttpStatus.OK).json({ info: users });
     }
 }

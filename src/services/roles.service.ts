@@ -12,7 +12,7 @@ export class RolesService {
     ) {}
 
     async create({ data }: { data: CreateInterface }) {
-        return this.rolesRepository.create(data);
+        return this.rolesRepository.save(data);
     }
     async getById({ id }: { id: number }) {
         return this.rolesRepository.findOne({

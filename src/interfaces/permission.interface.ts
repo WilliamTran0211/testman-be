@@ -5,5 +5,5 @@ export interface CreateInterface {
     description: string;
     resource: string;
     createdBy: User;
-    updatedBy: User;
+    updatedBy?: User;
 }

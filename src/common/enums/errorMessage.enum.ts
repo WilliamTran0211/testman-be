@@ -8,6 +8,8 @@ export enum errorMessage {
     NOT_FOUND_ISSUE = 'Issue not found ',
     WRONG_PASSWORD = 'Password is not valid',
     EXISTED_USER = 'Existed user',
+    EXISTED_PERMISSION = 'Existed permission',
+    EXISTED_ROLE = 'Existed role',
     WEAK_PASSWORD = 'Password is weak',
     TOKEN_INVALID = 'Token invalid',
     TOKEN_EXPIRED = 'Token expired',
@@ -18,8 +20,7 @@ export enum errorMessage {
     NOT_SUPPORTED_FILE = 'File format not supported',
     FILE_SIZE_ALERT = 'File size must in range of 0MB to 25MB',
     IMAGE_REQUIRED = 'Image is required',
-    CONFIRM_NOT_MATCH = 'Password confim not match',
-    ML_DOWN = 'Machine Learning is down',
-    ML_ERROR = 'Machine Learning server error',
+    CONFIRM_NOT_MATCH = 'Password confirm not match',
+    SERVER_ERROR = 'Server error',
     NOT_FOUND_PERMISSION = 'Permission not found'
 }

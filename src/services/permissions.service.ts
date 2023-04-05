@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RESOURCES, RIGHTS } from 'src/common/enums/permission.enum';
 import { Permission } from 'src/entities/permission.entity';
 import { CreateInterface } from 'src/interfaces/permission.interface';
 import { In, Repository } from 'typeorm';
@@ -12,7 +13,7 @@ export class PermissionsService {
     ) {}
 
     async create({ data }: { data: CreateInterface }) {
-        return this.permissionsRepository.create(data);
+        return this.permissionsRepository.save(data);
     }
     async getAll() {
         return this.permissionsRepository.find();
@@ -27,9 +28,20 @@ export class PermissionsService {
             where: { id: In(ids) }
         });
     }
-    async getByName({ name }: { name: string }) {
+    async getByName({ name }: { name: RIGHTS }) {
         return this.permissionsRepository.findOne({
             where: { name }
+        });
+    }
+    async getByNameAndResource({
+        name,
+        resource
+    }: {
+        name: RIGHTS;
+        resource: RESOURCES;
+    }) {
+        return this.permissionsRepository.findOne({
+            where: { name, resource }
         });
     }
 }

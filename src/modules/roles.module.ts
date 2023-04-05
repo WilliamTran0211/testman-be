@@ -10,11 +10,7 @@ import { UsersService } from 'src/services/users.service';
 import { PermissionsModule } from './permissions.module';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([Role]),
-        forwardRef(() => UsersModule),
-        PermissionsModule
-    ],
+    imports: [TypeOrmModule.forFeature([Role]), UsersModule, PermissionsModule],
     exports: [TypeOrmModule],
     controllers: [RolesController],
     providers: [RolesService, UsersService, PermissionsService]
