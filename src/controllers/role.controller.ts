@@ -14,7 +14,8 @@ import {
     ApiBody,
     ApiCreatedResponse,
     ApiInternalServerErrorResponse,
-    ApiTags
+    ApiTags,
+    ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
 import { successMessage } from 'src/common/enums/successMessage';
@@ -35,6 +36,7 @@ export class RolesController {
     @ApiBody(swaggerRequest.inputRole)
     @ApiCreatedResponse(swaggerResponse.createSuccess(String))
     @ApiBadRequestResponse(swaggerResponse.badRequest())
+    @ApiUnauthorizedResponse(swaggerResponse.unAuthorizedError())
     @ApiInternalServerErrorResponse(swaggerResponse.serverError())
     async create(
         @Req() request,

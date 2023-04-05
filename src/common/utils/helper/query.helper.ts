@@ -1,4 +1,5 @@
 import { FilterOptions } from 'src/common/types/filter.type';
+import { PaginationOptions } from 'src/common/types/query.type';
 import {
     ORDER,
     USERS_FILED,
@@ -26,10 +27,23 @@ export const search = ({
 };
 
 //sort function: order is field sorting and dir is direction of sorting
-export const sort = (order?: string, dir?: string) => {
-    const sort = {};
-    if (order && dir) sort[order] = dir == ORDER.DESC ? -1 : 1;
-    return sort;
+export const customSort = ({
+    sort,
+    order
+}: {
+    sort?: USERS_FILED;
+    order?: ORDER;
+}) => {
+    if (!order || !sort) {
+        return { createdAt: ORDER.DESC };
+    }
+    const sortOption = {};
+    if (sort === USERS_FILED.ROLE) {
+        sortOption[sort] = { name: order };
+        return sortOption;
+    }
+    sortOption[sort] = order;
+    return sortOption;
 };
 
 export const customFilter = (filterOptions: FilterOptions) => {
@@ -37,7 +51,6 @@ export const customFilter = (filterOptions: FilterOptions) => {
     if (!filterOptions || filterOptions.length === 0) return filter;
     filterOptions.forEach(filterOption => {
         const { field, value, isId } = filterOption;
-        const filter = value;
         if (value && !isId) filter[field] = value;
         if (value && isId) filter[field] = { id: value };
     });
@@ -62,7 +75,7 @@ export const pagination = ({
 }: {
     limit?: number;
     offset?: number;
-}) => {
+}): PaginationOptions => {
     if (limit == undefined || offset == undefined)
         return { limit: 0, offset: 0 };
     if (limit > 0 && offset > 0) {

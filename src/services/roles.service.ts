@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Role } from 'src/entities/role.entity';
-import { CreateInterface } from 'src/interfaces/role.interface';
+import { CreateRoleInterface } from 'src/interfaces/role.interface';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -11,7 +11,7 @@ export class RolesService {
         private rolesRepository: Repository<Role>
     ) {}
 
-    async create({ data }: { data: CreateInterface }) {
+    async create({ data }: { data: CreateRoleInterface }) {
         return this.rolesRepository.save(data);
     }
     async getById({ id }: { id: number }) {

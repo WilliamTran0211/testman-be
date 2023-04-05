@@ -1,7 +1,7 @@
 import { Permission } from 'src/entities/permission.entity';
 import { User } from 'src/entities/user.entity';
 
-export interface CreateInterface {
+export interface CreateRoleInterface {
     name: string;
     description: string;
     permissions: Permission[];

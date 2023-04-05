@@ -1,6 +1,6 @@
 import { Role } from 'src/entities/role.entity';
 
-export interface CreateInterface {
+export interface CreateUserInterface {
     email: string;
     password: string;
     fullName: string;
