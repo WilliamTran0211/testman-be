@@ -102,5 +102,14 @@ export const swaggerRequest = {
                 permissions: [1, 2, 3, 4, 5]
             }
         }
+    },
+    inputPermission: {
+        schema: {
+            type: 'object',
+            default: {
+                name: 'create',
+                resource: 'user'
+            }
+        }
     }
 };
