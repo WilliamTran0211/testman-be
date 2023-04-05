@@ -2,15 +2,6 @@ export enum ORDER {
     ASC = 'ASC',
     DESC = 'DESC'
 }
-export enum SORT_FIELD {
-    DETAIL = 'detail',
-    ATTACHMENTS_QUANTITY = 'attachments_quantity',
-    CREATED_AT = 'created_at',
-    CATEGORY = 'category.id',
-    CONTENT_TYPE = 'contentType.id',
-    VIEW = 'views',
-    TITLE = 'content.title'
-}
 
 export enum USERS_SEARCH_FIELD {
     FULL_NAME = 'fullName',

@@ -22,5 +22,6 @@ export enum errorMessage {
     IMAGE_REQUIRED = 'Image is required',
     CONFIRM_NOT_MATCH = 'Password confirm not match',
     SERVER_ERROR = 'Server error',
-    NOT_FOUND_PERMISSION = 'Permission not found'
+    NOT_FOUND_PERMISSION = 'Permission not found',
+    DUPLICATE_PERMISSION = 'Duplicate permission'
 }

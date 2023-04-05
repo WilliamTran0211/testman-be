@@ -6,9 +6,9 @@ import {
     USER_FIELD_WITH_REFRESH_TOKEN
 } from 'src/common/contants/fields.contants';
 import { STATUS } from 'src/common/enums/status';
-import { Role } from 'src/entities/role.entity';
+import { QueryOptions } from 'src/common/types/query.type';
 import { User } from 'src/entities/user.entity';
-import { CreateInterface } from 'src/interfaces/user.interface';
+import { CreateUserInterface } from 'src/interfaces/user.interface';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -18,7 +18,7 @@ export class UsersService {
         private usersRepository: Repository<User>
     ) {}
 
-    async createUser({ data }: { data: CreateInterface }) {
+    async createUser({ data }: { data: CreateUserInterface }) {
         return this.usersRepository.save(data);
     }
     async getById({ id }: { id: number }) {
@@ -56,19 +56,22 @@ export class UsersService {
             select: USER_FIELD_WITH_REFRESH_TOKEN
         });
     }
-    async getAll({
-        searchOptions,
-        filterOptions,
-        relationOptions,
-        selectOptions,
-        paginationOptions
-    }) {
+    async getAll(queryOptions: QueryOptions) {
+        const {
+            searchOptions,
+            filterOptions,
+            relationOptions,
+            selectOptions,
+            paginationOptions,
+            sortOptions
+        } = queryOptions;
         return await this.usersRepository.find({
             where: { ...searchOptions, ...filterOptions },
             relations: relationOptions,
             select: selectOptions,
             skip: paginationOptions.offset,
-            take: paginationOptions.limit
+            take: paginationOptions.limit,
+            order: sortOptions
         });
     }
     async updateRefreshToken({
