@@ -1,11 +1,14 @@
 export enum errorMessage {
     BAD_REQUEST = 'Please enter a valid input',
+    NOT_FOUND = 'Not found',
     NOT_FOUND_TOKEN = 'Please enter a valid token',
     NOT_FOUND_EMAIL = 'Please enter a valid email address',
     NOT_FOUND_USER = 'User not found',
     NOT_FOUND_IMAGE = 'Image not found',
     NOT_FOUND_NUMBER_PHONE = 'Phone number is not valid',
     NOT_FOUND_ISSUE = 'Issue not found ',
+    NOT_FOUND_ROLE = 'Role not found',
+    NOT_FOUND_PERMISSION = 'Permission not found',
     WRONG_PASSWORD = 'Password is not valid',
     EXISTED_USER = 'Existed user',
     EXISTED_PERMISSION = 'Existed permission',
@@ -22,6 +25,6 @@ export enum errorMessage {
     IMAGE_REQUIRED = 'Image is required',
     CONFIRM_NOT_MATCH = 'Password confirm not match',
     SERVER_ERROR = 'Server error',
-    NOT_FOUND_PERMISSION = 'Permission not found',
-    DUPLICATE_PERMISSION = 'Duplicate permission'
+    DUPLICATE_PERMISSION = 'Duplicate permission',
+    DUPLICATE_ROLE = 'Duplicate role'
 }

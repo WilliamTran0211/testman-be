@@ -122,7 +122,7 @@ export class PermissionsController {
         if (duplicatePermission && duplicatePermission.id !== id)
             throw new BadRequestException(errorMessage.DUPLICATE_PERMISSION);
 
-        const result = await this.permissionsService.update({
+        const updateInfo = await this.permissionsService.update({
             id,
             data: {
                 name,
@@ -131,10 +131,15 @@ export class PermissionsController {
                 updatedBy: request.user
             }
         });
-        if (!result) {
+        if (!updateInfo.affected) {
             throw new InternalServerErrorException(errorMessage.SERVER_ERROR);
         }
-        return response.status(HttpStatus.OK).json({ info: result });
+        const updatedPermissions = await this.permissionsService.getById({
+            id
+        });
+        return response
+            .status(HttpStatus.OK)
+            .json({ info: updatedPermissions });
     }
     @Delete(':id')
     @ApiResponse(swaggerResponse.getSuccess(String))
@@ -144,7 +149,7 @@ export class PermissionsController {
     async delete(@Res() response, @Param() { id }: FindOneParams) {
         const deleteResponse = await this.permissionsService.softDelete({ id });
         if (!deleteResponse.affected) {
-            throw new NotFoundException(errorMessage.NOT_FOUND_PERMISSION);
+            throw new BadRequestException(errorMessage.NOT_FOUND_PERMISSION);
         }
         return response
             .status(HttpStatus.OK)

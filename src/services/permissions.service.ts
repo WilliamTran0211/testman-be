@@ -33,7 +33,7 @@ export class PermissionsService {
     }
     async getByIds({ ids }: { ids: number[] }) {
         return await this.permissionsRepository.find({
-            where: { id: In(ids) }
+            where: { id: In(ids), status: STATUS.ACTIVATE }
         });
     }
     async getByName({ name }: { name: RIGHTS }) {
@@ -59,8 +59,10 @@ export class PermissionsService {
         id: number;
         data: UpdatePermissionInterface;
     }) {
-        await this.permissionsRepository.update(id, data);
-        return await this.permissionsRepository.findOneBy({ id });
+        return await this.permissionsRepository.update(
+            { id, status: STATUS.ACTIVATE },
+            data
+        );
     }
     async softDelete({ id }: { id: number }) {
         return await this.permissionsRepository.update(
