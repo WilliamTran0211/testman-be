@@ -42,7 +42,7 @@ import { swaggerRequest } from 'src/common/swagger/request.swagger';
 export class AuthController {
     constructor(
         private readonly userService: UsersService,
-        private roleService: RolesService,
+        private rolesService: RolesService,
         private jwtService: JwtService
     ) {}
 
@@ -113,7 +113,7 @@ export class AuthController {
             password,
             jwtConstants.HASH_ROUND
         );
-        const defaultRole = await this.roleService.getByName({
+        const defaultRole = await this.rolesService.getByName({
             name: ROLE.ADMIN
         });
         const result = await this.userService.createUser({

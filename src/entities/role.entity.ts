@@ -1,9 +1,8 @@
-import { Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
+import { Entity, JoinTable, ManyToMany } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
 import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
-import { Permission } from './permission.entity';
-import { User } from './user.entity';
 import { BaseWithCreatedEntityInfo } from './base.created.entity';
+import { Permission } from './permission.entity';
 
 @Entity()
 export class Role extends BaseWithCreatedEntityInfo {
@@ -18,7 +17,4 @@ export class Role extends BaseWithCreatedEntityInfo {
         name: 'roles_permissions'
     })
     permissions: Permission[];
-    @ManyToOne(() => User, user => user.roles)
-    @JoinColumn({ name: 'created_by' })
-    createdBy: User;
 }
