@@ -34,6 +34,13 @@ export const swaggerResponse = {
             type: String
         };
     },
+    notFound: () => {
+        return {
+            status: HttpStatus.NOT_FOUND,
+            description: errorMessage.NOT_FOUND,
+            type: String
+        };
+    },
     serverError: () => {
         return {
             status: HttpStatus.INTERNAL_SERVER_ERROR,

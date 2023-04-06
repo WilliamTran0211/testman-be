@@ -1,10 +1,12 @@
 import {
     ArrayMinSize,
     IsArray,
+    IsEnum,
     IsNotEmpty,
     IsOptional,
     IsString
 } from 'class-validator';
+import { STATUS } from 'src/common/enums/status';
 
 export class RoleInputDTO {
     @IsNotEmpty()
@@ -21,36 +23,28 @@ export class RoleInputDTO {
     permissions: Array<number>;
 }
 export class UpdateRoleInputDTO {
-    @IsOptional()
-    @IsNotEmpty()
+    @IsOptional(null)
     @IsString()
     name?: string;
 
-    @IsNotEmpty()
+    @IsString()
+    @IsOptional(null)
+    description?: string;
+
+    @IsOptional(null)
     @IsArray()
     @ArrayMinSize(1)
-    permissions: Array<number>;
+    permissions?: Array<number>;
 }
 
-export class CreateRoleDTO {
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+export class GetRolesDTO {
+    @IsEnum(STATUS)
+    @IsOptional(null)
+    statusFilter?: STATUS;
 }
-
 export class UpdateRoleDTO {
     @IsNotEmpty()
     name?: string;
-}
-
-export class PermissionDTO {
-    @IsNotEmpty()
-    @IsString()
-    name: string;
-
-    @IsNotEmpty()
-    @IsString()
-    resources: string;
 }
 
 export class UpdatePermissionDTO {
