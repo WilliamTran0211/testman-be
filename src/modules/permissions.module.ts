@@ -9,7 +9,10 @@ import { UsersService } from 'src/services/users.service';
 import { UsersModule } from './users.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Permission]), UsersModule],
+    imports: [
+        TypeOrmModule.forFeature([Permission]),
+        forwardRef(() => UsersModule)
+    ],
     exports: [TypeOrmModule],
     controllers: [PermissionsController],
     providers: [PermissionsService, UsersService]

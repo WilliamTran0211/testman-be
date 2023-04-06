@@ -47,7 +47,14 @@ export class SignupDTO {
     @Match('password', { message: errorMessage.CONFIRM_NOT_MATCH })
     confirmPassword: string;
 }
-export class GetUserQuery extends PaginationDTO {
+
+export class CreateUserDTO extends SignupDTO {
+    @IsNumber()
+    @IsOptional(null)
+    @Transform(({ value }) => Number(value))
+    roleId: number;
+}
+export class GetUserQueryDTO extends PaginationDTO {
     @IsString()
     @IsOptional(null)
     searchKey?: string;

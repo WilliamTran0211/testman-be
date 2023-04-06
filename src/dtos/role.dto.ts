@@ -42,17 +42,3 @@ export class GetRolesDTO {
     @IsOptional(null)
     statusFilter?: STATUS;
 }
-export class UpdateRoleDTO {
-    @IsNotEmpty()
-    name?: string;
-}
-
-export class UpdatePermissionDTO {
-    @IsNotEmpty()
-    @IsString()
-    name?: string;
-
-    @IsNotEmpty()
-    @IsString()
-    resources?: string;
-}

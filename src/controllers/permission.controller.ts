@@ -16,8 +16,7 @@ import {
 } from '@nestjs/common/decorators';
 import {
     BadRequestException,
-    InternalServerErrorException,
-    NotFoundException
+    InternalServerErrorException
 } from '@nestjs/common/exceptions';
 import {
     ApiBadRequestResponse,
@@ -34,7 +33,11 @@ import { swaggerRequest } from 'src/common/swagger/request.swagger';
 import { swaggerResponse } from 'src/common/swagger/response.swagger';
 import { customFilter } from 'src/common/utils/helper/query.helper';
 import FindOneParams from 'src/dtos/params.dto';
-import { GetPermissionsDTO, PermissionInputDTO } from 'src/dtos/permission.dto';
+import {
+    GetPermissionsDTO,
+    PermissionInputDTO,
+    UpdatePermissionDTO
+} from 'src/dtos/permission.dto';
 import { Permission } from 'src/entities/permission.entity';
 import { PermissionsService } from 'src/services/permissions.service';
 
@@ -107,7 +110,7 @@ export class PermissionsController {
         @Res() response,
         @Param() { id }: FindOneParams,
         @Body(new ValidationPipe({ transform: true }))
-        body: PermissionInputDTO
+        body: UpdatePermissionDTO
     ) {
         const { name, resource, description } = body;
         const existedPermission = await this.permissionsService.getById({ id });

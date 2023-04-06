@@ -74,7 +74,18 @@ export const swaggerRequest = {
             }
         }
     },
-
+    inputCreateUser: {
+        schema: {
+            type: 'object',
+            default: {
+                email: 'longnt@nexondv.com',
+                fullName: 'Nguyễn Thanh Long',
+                password: 'StrongPassword!1',
+                confirmPassword: 'StrongPassword!1',
+                roleId: 2
+            }
+        }
+    },
     inputChangePassword: {
         schema: {
             type: 'object',

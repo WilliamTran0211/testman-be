@@ -6,7 +6,7 @@ import { User } from './user.entity';
 export class BaseWithCreatedEntityInfo extends BaseEntityInfo {
     @ManyToOne(() => User)
     @JoinColumn({ name: 'created_by' })
-    createdBy: User;
+    createdBy?: User;
     @ManyToOne(() => User)
     @JoinColumn({ name: 'updated_by' })
     updatedBy?: User;
