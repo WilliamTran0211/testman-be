@@ -33,9 +33,9 @@ export class AuthMiddleware implements NestMiddleware {
             throw new UnauthorizedException(errorMessage.UNAUTHORIZED);
         }
         // get user from access_token
-        const user = await this.userService.getByIdWithRefreshToken(
-            decodedJwtAccessToken.id
-        );
+        const user = await this.userService.getByIdWithRefreshToken({
+            id: decodedJwtAccessToken.id
+        });
         //invalid data refresh token
         if (!user || !user.refreshToken)
             throw new UnauthorizedException(errorMessage.UNAUTHORIZED);

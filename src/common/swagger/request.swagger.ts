@@ -45,7 +45,9 @@ export const swaggerRequest = {
                 email: 'longnt@nexondv.com',
                 fullName: 'Nguyễn Thanh Long',
                 password: 'StrongPassword!1',
-                confirmPassword: 'StrongPassword!1'
+                confirmPassword: 'StrongPassword!1',
+                phoneNumber: '0388813493',
+                dayOfBirth: '10/04/2000'
             }
         }
     },
@@ -60,17 +62,39 @@ export const swaggerRequest = {
         }
     },
 
+    // inputUpdateUser: {
+    //     schema: {
+    //         type: 'object',
+    //         properties: {
+    //             avatar: {
+    //                 type: 'string',
+    //                 format: 'binary'
+    //             },
+    //             name: {
+    //                 type: 'string'
+    //             }
+    //         }
+    //     }
+    // },
     inputUpdateUser: {
         schema: {
             type: 'object',
-            properties: {
-                avatar: {
-                    type: 'string',
-                    format: 'binary'
-                },
-                name: {
-                    type: 'string'
-                }
+            default: {
+                fullName: 'Nguyễn Thanh Long',
+                phoneNumber: '0388813493',
+                dayOfBirth: '10/04/2000',
+                avatar: 1
+            }
+        }
+    },
+    inputUpdateUserForAdmin: {
+        schema: {
+            type: 'object',
+            default: {
+                fullName: 'Nguyễn Thanh Long',
+                roleId: 2,
+                phoneNumber: '0388813493',
+                dayOfBirth: '10/04/2000'
             }
         }
     },
@@ -82,7 +106,9 @@ export const swaggerRequest = {
                 fullName: 'Nguyễn Thanh Long',
                 password: 'StrongPassword!1',
                 confirmPassword: 'StrongPassword!1',
-                roleId: 2
+                roleId: 2,
+                phoneNumber: '0388813493',
+                dayOfBirth: '10/04/2000'
             }
         }
     },

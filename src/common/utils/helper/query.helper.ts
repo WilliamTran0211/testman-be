@@ -63,7 +63,8 @@ export const customSelectedFields = (selectedFields: USERS_FILED[]) => {
     if (!selectedFields || selectedFields.length === 0)
         return { selectOptions, relationOptions };
     selectedFields.forEach(field => {
-        if (field === USERS_FILED.ROLE) relationOptions[field] = true;
+        if ([USERS_FILED.ROLE, USERS_FILED.AVATAR].includes(field))
+            relationOptions[field] = true;
         selectOptions[field] = true;
     });
     return { selectOptions, relationOptions };

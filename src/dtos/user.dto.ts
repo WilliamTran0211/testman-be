@@ -1,11 +1,13 @@
 import { Transform } from 'class-transformer';
 import {
     IsArray,
+    IsDate,
     IsEmail,
     IsEnum,
     IsNotEmpty,
     IsNumber,
     IsOptional,
+    IsPhoneNumber,
     IsString,
     Matches,
     MaxLength,
@@ -29,13 +31,25 @@ export class LoginDTO {
     @MaxLength(20)
     password: string;
 }
-
-export class SignupDTO {
-    @IsEmail()
-    email: string;
+export class UserBaseDTO {
     @IsNotEmpty()
     @MaxLength(100)
     fullName: string;
+    @IsDate()
+    @IsOptional(null)
+    @Transform(({ value }) => new Date(value))
+    dayOfBirth?: Date;
+    @IsPhoneNumber('VN')
+    @IsOptional(null)
+    phoneNumber?: string;
+    @IsNumber()
+    @IsOptional(null)
+    @Transform(({ value }) => Number(value))
+    avatarId?: number;
+}
+export class SignupDTO extends UserBaseDTO {
+    @IsEmail()
+    email: string;
     @MinLength(8)
     @MaxLength(20)
     @Matches(new RegExp(regex.passwordRegex), {
@@ -49,6 +63,12 @@ export class SignupDTO {
 }
 
 export class CreateUserDTO extends SignupDTO {
+    @IsNumber()
+    @IsOptional(null)
+    @Transform(({ value }) => Number(value))
+    roleId: number;
+}
+export class UpdateUserForAdminDTO extends UserBaseDTO {
     @IsNumber()
     @IsOptional(null)
     @Transform(({ value }) => Number(value))

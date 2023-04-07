@@ -16,5 +16,6 @@ export enum USERS_FILED {
     PHONE_NUMBER = 'phoneNumber',
     DAY_OF_BIRTH = 'dayOfBirth',
     ROLE = 'role',
-    STATUS = 'status'
+    STATUS = 'status',
+    AVATAR = 'avatar'
 }
