@@ -8,7 +8,10 @@ import {
 import { STATUS } from 'src/common/enums/status';
 import { QueryOptions } from 'src/common/types/query.type';
 import { User } from 'src/entities/user.entity';
-import { CreateUserInterface } from 'src/interfaces/user.interface';
+import {
+    BaseUserInterface,
+    CreateUserInterface
+} from 'src/interfaces/user.interface';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -82,5 +85,9 @@ export class UsersService {
         refreshToken: string;
     }) {
         return await this.usersRepository.update({ id }, { refreshToken });
+    }
+
+    async update({ id, data }: { id: number; data: BaseUserInterface }) {
+        return await this.usersRepository.update(id, data);
     }
 }

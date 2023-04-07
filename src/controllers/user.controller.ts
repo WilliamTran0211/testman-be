@@ -6,6 +6,8 @@ import {
     HttpStatus,
     Injectable,
     InternalServerErrorException,
+    Param,
+    Patch,
     Post,
     Query,
     Req,
@@ -35,8 +37,15 @@ import {
     pagination,
     search
 } from 'src/common/utils/helper/query.helper';
-import { CreateUserDTO, GetUserQueryDTO } from 'src/dtos/user.dto';
+import FindOneParams from 'src/dtos/params.dto';
+import {
+    CreateUserDTO,
+    GetUserQueryDTO,
+    UpdateUserForAdminDTO,
+    UserBaseDTO
+} from 'src/dtos/user.dto';
 import { User } from 'src/entities/user.entity';
+import { FilesService } from 'src/services/files.service';
 import { RolesService } from 'src/services/roles.service';
 import { UsersService } from 'src/services/users.service';
 
@@ -50,7 +59,8 @@ import { UsersService } from 'src/services/users.service';
 export class UsersController {
     constructor(
         private readonly userService: UsersService,
-        private readonly rolesService: RolesService
+        private readonly rolesService: RolesService,
+        private readonly filesService: FilesService
     ) {}
     @Post()
     @ApiBody(swaggerRequest.inputCreateUser)
@@ -63,7 +73,8 @@ export class UsersController {
         @Body(new ValidationPipe({ transform: true }))
         body: CreateUserDTO
     ) {
-        const { email, fullName, roleId, password } = body;
+        const { email, fullName, roleId, password, dayOfBirth, phoneNumber } =
+            body;
         const existedUser = await this.userService.getByEmail({ email });
         if (existedUser)
             throw new BadRequestException(errorMessage.EXISTED_USER);
@@ -85,7 +96,9 @@ export class UsersController {
                 password: hashedPassword,
                 fullName,
                 role: roleInfo,
-                createBy: request.user
+                createBy: request.user,
+                dayOfBirth,
+                phoneNumber
             }
         });
         if (!result)
@@ -133,5 +146,64 @@ export class UsersController {
             paginationOptions
         });
         return response.status(HttpStatus.OK).json({ info: users });
+    }
+    @Patch()
+    @ApiBody(swaggerRequest.inputUpdateUser)
+    @ApiCreatedResponse(swaggerResponse.createSuccess(String))
+    @ApiBadRequestResponse(swaggerResponse.badRequest())
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async updateUser(
+        @Req() request,
+        @Res() response,
+        @Body(new ValidationPipe({ transform: true }))
+        body: UserBaseDTO
+    ) {
+        const { fullName, avatarId, dayOfBirth, phoneNumber } = body;
+        const id = request.user.id;
+        const avatarInfo = await this.filesService.getById({ id: avatarId });
+        const updateInfo = await this.userService.update({
+            id,
+            data: { fullName, dayOfBirth, phoneNumber, avatar: avatarInfo }
+        });
+        if (!updateInfo.affected) {
+            throw new InternalServerErrorException(errorMessage.SERVER_ERROR);
+        }
+        const updatedUser = await this.userService.getById({
+            id
+        });
+        return response.status(HttpStatus.OK).json({ info: updatedUser });
+    }
+    @Patch(':id')
+    @ApiBody(swaggerRequest.inputUpdateUserForAdmin)
+    @ApiCreatedResponse(swaggerResponse.createSuccess(String))
+    @ApiBadRequestResponse(swaggerResponse.badRequest())
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async updateUserForAdmin(
+        @Res() response,
+        @Body(new ValidationPipe({ transform: true }))
+        body: UpdateUserForAdminDTO,
+        @Param() { id }: FindOneParams
+    ) {
+        const { fullName, dayOfBirth, phoneNumber, roleId } = body;
+        const existedUser = await this.userService.getById({ id });
+        if (!existedUser)
+            throw new BadRequestException(errorMessage.NOT_FOUND_USER);
+        let roleInfo;
+        if (roleId) {
+            roleInfo = await this.rolesService.getById({ id: roleId });
+            if (!roleInfo)
+                throw new BadRequestException(errorMessage.NOT_FOUND_ROLE);
+        }
+        const updateInfo = await this.userService.update({
+            id,
+            data: { fullName, dayOfBirth, phoneNumber, role: roleInfo }
+        });
+        if (!updateInfo.affected) {
+            throw new InternalServerErrorException(errorMessage.SERVER_ERROR);
+        }
+        const updatedUser = await this.userService.getById({
+            id
+        });
+        return response.status(HttpStatus.OK).json({ info: updatedUser });
     }
 }

@@ -1,4 +1,4 @@
-import { Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Entity, JoinTable, ManyToMany, OneToMany, OneToOne } from 'typeorm';
 import { Column } from 'typeorm/decorator/columns/Column';
 import { PrimaryGeneratedColumn } from 'typeorm/decorator/columns/PrimaryGeneratedColumn';
 import { JoinColumn } from 'typeorm/decorator/relations/JoinColumn';
@@ -6,6 +6,7 @@ import { ManyToOne } from 'typeorm/decorator/relations/ManyToOne';
 import { BaseWithCreatedEntityInfo } from './base.created.entity';
 import { Project } from './project.entity';
 import { Role } from './role.entity';
+import { File } from './file.entity';
 import { TestCase } from './testCase.entity';
 
 @Entity()
@@ -32,6 +33,11 @@ export class User extends BaseWithCreatedEntityInfo {
     @ManyToOne(() => Role, role => role.id)
     @JoinColumn({ name: 'role' })
     role: Role;
+
+    @OneToOne(() => File, file => file.id)
+    @JoinColumn({ name: 'avatar' })
+    avatar: File;
+
     @ManyToMany(() => Project, project => project.members)
     @JoinTable({
         name: 'project_member'

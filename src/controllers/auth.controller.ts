@@ -105,7 +105,7 @@ export class AuthController {
         @Body(new ValidationPipe({ transform: true }))
         body: SignupDTO
     ) {
-        const { email, fullName, password } = body;
+        const { email, fullName, password, phoneNumber, dayOfBirth } = body;
         const existedUser = await this.userService.getByEmail({ email });
         if (existedUser)
             throw new BadRequestException(errorMessage.EXISTED_USER);
@@ -114,14 +114,16 @@ export class AuthController {
             jwtConstants.HASH_ROUND
         );
         const defaultRole = await this.rolesService.getByName({
-            name: ROLE.ADMIN
+            name: ROLE.USER
         });
         const result = await this.userService.createUser({
             data: {
                 email,
                 password: hashedPassword,
                 fullName,
-                role: defaultRole
+                role: defaultRole,
+                phoneNumber,
+                dayOfBirth
             }
         });
         if (!result)
