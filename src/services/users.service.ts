@@ -27,7 +27,8 @@ export class UsersService {
     async getById({ id }: { id: number }) {
         return await this.usersRepository.findOne({
             relations: {
-                role: true
+                role: true,
+                avatar: true
             },
             where: { id },
             select: USER_FIELD

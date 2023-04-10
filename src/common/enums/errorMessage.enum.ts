@@ -4,6 +4,7 @@ export enum errorMessage {
     NOT_FOUND_TOKEN = 'Please enter a valid token',
     NOT_FOUND_EMAIL = 'Please enter a valid email address',
     NOT_FOUND_USER = 'User not found',
+    NOT_FOUND_FILE = 'File not found',
     NOT_FOUND_IMAGE = 'Image not found',
     NOT_FOUND_NUMBER_PHONE = 'Phone number is not valid',
     NOT_FOUND_ISSUE = 'Issue not found ',

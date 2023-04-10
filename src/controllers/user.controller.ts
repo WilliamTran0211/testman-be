@@ -161,6 +161,9 @@ export class UsersController {
         const { fullName, avatarId, dayOfBirth, phoneNumber } = body;
         const id = request.user.id;
         const avatarInfo = await this.filesService.getById({ id: avatarId });
+        if (!avatarInfo) {
+            throw new BadRequestException(errorMessage.NOT_FOUND_FILE);
+        }
         const updateInfo = await this.userService.update({
             id,
             data: { fullName, dayOfBirth, phoneNumber, avatar: avatarInfo }

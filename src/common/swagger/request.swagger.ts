@@ -26,11 +26,11 @@ export const swaggerRequest = {
         }
     },
 
-    inputDetect: {
+    inputUploadAvatar: {
         schema: {
             type: 'object',
             properties: {
-                image: {
+                file: {
                     type: 'string',
                     format: 'binary'
                 }
@@ -62,20 +62,6 @@ export const swaggerRequest = {
         }
     },
 
-    // inputUpdateUser: {
-    //     schema: {
-    //         type: 'object',
-    //         properties: {
-    //             avatar: {
-    //                 type: 'string',
-    //                 format: 'binary'
-    //             },
-    //             name: {
-    //                 type: 'string'
-    //             }
-    //         }
-    //     }
-    // },
     inputUpdateUser: {
         schema: {
             type: 'object',
@@ -83,7 +69,7 @@ export const swaggerRequest = {
                 fullName: 'Nguyễn Thanh Long',
                 phoneNumber: '0388813493',
                 dayOfBirth: '10/04/2000',
-                avatar: 1
+                avatarId: 1
             }
         }
     },
