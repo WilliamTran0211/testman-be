@@ -49,7 +49,7 @@ export class UsersService {
     }
     async getByIdWithPassword({ id }: { id: number }) {
         return await this.usersRepository.findOne({
-            where: { id },
+            where: { id, status: STATUS.ACTIVATE },
             select: USER_FIELD_WITH_PASSWORD
         });
     }
@@ -88,6 +88,6 @@ export class UsersService {
     }
 
     async update({ id, data }: { id: number; data: BaseUserInterface }) {
-        return await this.usersRepository.update(id, data);
+        return await this.usersRepository.update({ id }, data);
     }
 }

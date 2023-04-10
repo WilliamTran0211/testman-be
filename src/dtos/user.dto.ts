@@ -74,6 +74,28 @@ export class UpdateUserForAdminDTO extends UserBaseDTO {
     @Transform(({ value }) => Number(value))
     roleId: number;
 }
+
+export class ChangePasswordDTO {
+    @IsNotEmpty()
+    @Matches(new RegExp(regex.passwordRegex), {
+        message: errorMessage.WEAK_PASSWORD
+    })
+    oldPassword: string;
+
+    @IsNotEmpty()
+    @MinLength(8)
+    @MaxLength(20)
+    @Matches(new RegExp(regex.passwordRegex), {
+        message: errorMessage.WEAK_PASSWORD
+    })
+    password: string;
+
+    @IsNotEmpty()
+    @Match('password', {
+        message: errorMessage.CONFIRM_NOT_MATCH
+    })
+    confirmPassword: string;
+}
 export class GetUserQueryDTO extends PaginationDTO {
     @IsString()
     @IsOptional(null)

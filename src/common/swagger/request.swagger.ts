@@ -118,7 +118,7 @@ export const swaggerRequest = {
             default: {
                 oldPassword: 'StrongPassword!1',
                 password: 'StrongPassword!1',
-                passwordConfirm: 'StrongPassword!1'
+                confirmPassword: 'StrongPassword!1'
             }
         }
     },

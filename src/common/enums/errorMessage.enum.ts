@@ -26,5 +26,6 @@ export enum errorMessage {
     CONFIRM_NOT_MATCH = 'Password confirm not match',
     SERVER_ERROR = 'Server error',
     DUPLICATE_PERMISSION = 'Duplicate permission',
-    DUPLICATE_ROLE = 'Duplicate role'
+    DUPLICATE_ROLE = 'Duplicate role',
+    WRONG_CURRENT_PASSWORD = 'Wrong current password'
 }
