@@ -18,6 +18,9 @@ export class AuthModule {
     configure(consumer: MiddlewareConsumer) {
         consumer
             .apply(AuthMiddleware)
-            .forRoutes({ path: '/auth/me', method: RequestMethod.GET });
+            .forRoutes(
+                { path: '/auth/me', method: RequestMethod.GET },
+                { path: '/auth/change-password', method: RequestMethod.PATCH }
+            );
     }
 }

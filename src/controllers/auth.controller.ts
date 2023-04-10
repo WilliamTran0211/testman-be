@@ -10,12 +10,17 @@ import {
     ValidationPipe,
     InternalServerErrorException
 } from '@nestjs/common';
-import { Post } from '@nestjs/common/decorators/http/request-mapping.decorator';
+import {
+    Delete,
+    Patch,
+    Post
+} from '@nestjs/common/decorators/http/request-mapping.decorator';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
-import { LoginDTO, SignupDTO } from 'src/dtos/user.dto';
+import { ChangePasswordDTO, LoginDTO, SignupDTO } from 'src/dtos/user.dto';
 import { UsersService } from 'src/services/users.service';
 import * as bcrypt from 'bcrypt';
 import {
+    clearCookie,
     generateToken,
     setCookie
 } from 'src/common/utils/helper/authorize.helper';
@@ -51,7 +56,7 @@ export class AuthController {
     @ApiUnauthorizedResponse(swaggerResponse.unAuthorizedError())
     @ApiInternalServerErrorResponse(swaggerResponse.serverError())
     async getMe(@Req() request, @Res() response) {
-        const user = request.user;
+        const { user } = request;
         const userData = await this.userService.getById({ id: user.id });
         return response.status(HttpStatus.OK).json({ info: userData });
     }
@@ -131,5 +136,102 @@ export class AuthController {
         return response
             .status(HttpStatus.OK)
             .json({ info: successMessage.CREATED });
+    }
+
+    @Post('refresh-token')
+    @ApiResponse(swaggerResponse.getSuccess(User))
+    @ApiCreatedResponse(swaggerResponse.createSuccess(User))
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async refreshToken(
+        @Req() request,
+        @Res() response
+    ): Promise<{ info: string }> {
+        if (!request.cookies) {
+            throw new UnauthorizedException(errorMessage.UNAUTHORIZED);
+        }
+        const { refresh_token } = request.cookies;
+        if (!refresh_token) {
+            throw new UnauthorizedException(errorMessage.UNAUTHORIZED);
+        }
+        const refreshToken = refresh_token.split('Bearer ')[1];
+        const decodedJwtRefreshToken = this.jwtService.verify(refreshToken, {
+            secret: process.env.JWT_SECRET_KEY
+        });
+        if (!decodedJwtRefreshToken)
+            throw new UnauthorizedException(errorMessage.NOT_FOUND_USER);
+        const foundUser = await this.userService.getByIdWithRefreshToken({
+            id: decodedJwtRefreshToken.id
+        });
+        if (!foundUser) {
+            throw new UnauthorizedException(errorMessage.NOT_FOUND_USER);
+        }
+        const tokenData = generateToken({
+            jwtService: this.jwtService,
+            userInfo: { id: foundUser.id, email: foundUser.email }
+        });
+        await this.userService.updateRefreshToken({
+            id: decodedJwtRefreshToken.id,
+            refreshToken: tokenData.refresh_token
+        });
+        setCookie({ response, tokenData });
+        return response.status(HttpStatus.OK).json({
+            info: successMessage.OK
+        });
+    }
+
+    @Patch('change-password')
+    @ApiBody(swaggerRequest.inputChangePassword)
+    @ApiResponse(swaggerResponse.getSuccess(String))
+    @ApiUnauthorizedResponse(swaggerResponse.unAuthorizedError())
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async changeUserPassword(
+        @Body(new ValidationPipe({ transform: true }))
+        body: ChangePasswordDTO,
+        @Req() request,
+        @Res() response
+    ) {
+        const { user } = request;
+        const { oldPassword, password } = body;
+        const foundUser = await this.userService.getByIdWithPassword({
+            id: user.id
+        });
+        if (!foundUser) {
+            throw new BadRequestException(errorMessage.NOT_FOUND_USER);
+        }
+
+        const isCorrectCurrentPassword = await bcrypt.compare(
+            oldPassword,
+            foundUser.password
+        );
+
+        if (!isCorrectCurrentPassword) {
+            throw new UnauthorizedException(
+                errorMessage.WRONG_CURRENT_PASSWORD
+            );
+        }
+
+        const hashPassword = await bcrypt.hash(password, 10);
+        const results = await this.userService.update({
+            id: user.id,
+            data: { password: hashPassword }
+        });
+
+        if (!results.affected) {
+            throw new InternalServerErrorException(errorMessage.SERVER_ERROR);
+        }
+        return response
+            .status(HttpStatus.OK)
+            .json({ info: successMessage.CHANGE_PASSWORD_SUCCESS });
+    }
+
+    @Delete('logout')
+    @ApiResponse(swaggerResponse.getSuccess(User))
+    @ApiCreatedResponse(swaggerResponse.createSuccess(User))
+    @ApiInternalServerErrorResponse(swaggerResponse.serverError())
+    async logout(@Res() response): Promise<{ info: string }> {
+        clearCookie(response);
+        return response
+            .status(HttpStatus.OK)
+            .json({ info: successMessage.DELETED });
     }
 }

@@ -1,13 +1,13 @@
-import { MiddlewareConsumer, Module, forwardRef } from '@nestjs/common';
+import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersController } from 'src/controllers/user.controller';
 import { User } from 'src/entities/user.entity';
 import { AuthMiddleware } from 'src/middlewares/auth.middleware';
-import { UsersService } from 'src/services/users.service';
-import { RolesModule } from './roles.module';
-import { RolesService } from 'src/services/roles.service';
-import { FilesModule } from './file.module';
 import { FilesService } from 'src/services/files.service';
+import { RolesService } from 'src/services/roles.service';
+import { UsersService } from 'src/services/users.service';
+import { FilesModule } from './file.module';
+import { RolesModule } from './roles.module';
 
 @Module({
     imports: [TypeOrmModule.forFeature([User]), RolesModule, FilesModule],

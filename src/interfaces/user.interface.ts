@@ -3,11 +3,12 @@ import { Role } from 'src/entities/role.entity';
 import { User } from 'src/entities/user.entity';
 
 export interface BaseUserInterface {
-    fullName: string;
+    fullName?: string;
     dayOfBirth?: Date;
     phoneNumber?: string;
     role?: Role;
     avatar?: File;
+    password?: string;
 }
 export interface CreateUserInterface extends BaseUserInterface {
     email: string;

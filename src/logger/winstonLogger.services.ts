@@ -190,10 +190,10 @@ export const SimpleLogFormatting = (request: any) => {
 
     if (
         body &&
-        (body['password'] || body['passwordConfirm'] || body['oldPassword'])
+        (body['password'] || body['confirmPassword'] || body['oldPassword'])
     ) {
         delete body['password'];
-        delete body['passwordConfirm'];
+        delete body['confirmPassword'];
         delete body['oldPassword'];
     }
 
@@ -222,9 +222,9 @@ export const RequestFormatting = (request: any) => {
         request.protocol + '://' + request.get('host') + request.originalUrl;
 
     const body = { ...request.body };
-    if (body['password'] || body['passwordConfirm'] || body['oldPassword']) {
+    if (body['password'] || body['confirmPassword'] || body['oldPassword']) {
         delete body['password'];
-        delete body['passwordConfirm'];
+        delete body['confirmPassword'];
         delete body['oldPassword'];
     }
     return {
@@ -263,11 +263,11 @@ export const ResponseFormatting = (
     if (
         action_detail &&
         (action_detail['password'] ||
-            action_detail['passwordConfirm'] ||
+            action_detail['confirmPassword'] ||
             action_detail['oldPassword'])
     ) {
         delete action_detail['password'];
-        delete action_detail['passwordConfirm'];
+        delete action_detail['confirmPassword'];
         delete action_detail['oldPassword'];
     }
     return {
