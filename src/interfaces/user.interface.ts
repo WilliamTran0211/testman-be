@@ -8,6 +8,7 @@ export interface BaseUserInterface {
     phoneNumber?: string;
     role?: Role;
     avatar?: File;
+    banner?: File;
     password?: string;
 }
 export interface CreateUserInterface extends BaseUserInterface {

@@ -46,6 +46,10 @@ export class UserBaseDTO {
     @IsOptional(null)
     @Transform(({ value }) => Number(value))
     avatarId?: number;
+    @IsNumber()
+    @IsOptional(null)
+    @Transform(({ value }) => Number(value))
+    bannerId?: number;
 }
 export class SignupDTO extends UserBaseDTO {
     @IsEmail()

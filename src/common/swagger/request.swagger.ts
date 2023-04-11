@@ -69,7 +69,8 @@ export const swaggerRequest = {
                 fullName: 'Nguyễn Thanh Long',
                 phoneNumber: '0388813493',
                 dayOfBirth: '10/04/2000',
-                avatarId: 1
+                avatarId: 1,
+                bannerId: 1
             }
         }
     },

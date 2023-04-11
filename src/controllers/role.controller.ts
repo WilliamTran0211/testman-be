@@ -28,7 +28,7 @@ import { successMessage } from 'src/common/enums/successMessage';
 import { swaggerRequest } from 'src/common/swagger/request.swagger';
 import { swaggerResponse } from 'src/common/swagger/response.swagger';
 import { customFilter } from 'src/common/utils/helper/query.helper';
-import FindOneParams from 'src/dtos/params.dto';
+import { FindOneParams } from 'src/dtos/params.dto';
 import {
     GetRolesDTO,
     RoleInputDTO,

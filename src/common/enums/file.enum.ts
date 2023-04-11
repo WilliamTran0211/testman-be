@@ -10,3 +10,11 @@ export enum FileStorage {
     PROJECT_BANNER = '/project/banner',
     TEST_CASE = '/test-case'
 }
+
+export enum FileStorageDatabase {
+    USER_AVATAR = 'userAvatar',
+    USER_BANNER = 'userBanner',
+    PROJECT_AVATAR = 'projectAvatar',
+    PROJECT_BANNER = 'projectBanner',
+    TEST_CASE = 'testCase'
+}

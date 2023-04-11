@@ -42,6 +42,14 @@ export class User extends BaseWithCreatedEntityInfo {
     @JoinColumn({ name: 'avatar' })
     avatars: File[];
 
+    @OneToOne(() => File, file => file.id)
+    @JoinColumn({ name: 'banner' })
+    banner: File;
+
+    @OneToMany(() => File, file => file.id)
+    @JoinColumn({ name: 'banners' })
+    banners: File[];
+
     @ManyToMany(() => Project, project => project.members)
     @JoinTable({
         name: 'project_member'

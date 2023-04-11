@@ -17,6 +17,10 @@ export class File extends BaseWithCreatedEntityInfo {
     url: string;
 
     @ManyToOne(() => User, (user: User) => user.avatars)
-    @JoinColumn({ name: 'user' })
-    user: User;
+    @JoinColumn({ name: 'user_avatar' })
+    userAvatar: User;
+
+    @ManyToOne(() => User, (user: User) => user.banners)
+    @JoinColumn({ name: 'user_banner' })
+    userBanner: User;
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FileStorageDatabase } from 'src/common/enums/file.enum';
 import { STATUS } from 'src/common/enums/status';
 import { File } from 'src/entities/file.entity';
 import { CreateFileInterface } from 'src/interfaces/file.interface';
@@ -34,6 +35,18 @@ export class FilesService {
     async getById({ id }: { id: number }): Promise<File> {
         return this.filesRepository.findOne({
             where: { id, status: STATUS.ACTIVATE }
+        });
+    }
+
+    async getByIdAndType({
+        id,
+        type
+    }: {
+        id: number;
+        type: object;
+    }): Promise<File> {
+        return this.filesRepository.findOne({
+            where: { id, ...type, status: STATUS.ACTIVATE }
         });
     }
 
