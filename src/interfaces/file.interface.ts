@@ -9,6 +9,7 @@ export interface FileInterface {
 
 export interface CreateFileInterface {
     url: string;
+    user?: User;
     status?: STATUS;
     createdBy: User;
     updatedBy?: User;

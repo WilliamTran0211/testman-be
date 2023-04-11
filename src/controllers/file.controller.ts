@@ -20,6 +20,7 @@ import {
     ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
+import { FileStorage } from 'src/common/enums/file.enum';
 import { swaggerRequest } from 'src/common/swagger/request.swagger';
 import { swaggerResponse } from 'src/common/swagger/response.swagger';
 import { uploadFileProcessor } from 'src/common/utils/helper/fileProcessing.helper';
@@ -45,12 +46,16 @@ export class FilesController {
         @UploadedFile() file: Express.Multer.File
     ) {
         const { user } = request;
-        const uploadedStatus = await uploadFileProcessor([file], user.id);
+        const uploadedStatus = await uploadFileProcessor({
+            files: [file],
+            id: user.id,
+            fileStorage: FileStorage.USER_AVATAR
+        });
         if (uploadedStatus?.error) {
             throw new BadRequestException(uploadedStatus.error);
         }
         const filesData = uploadedStatus.urls.map(url => {
-            const file = { url, createdBy: user };
+            const file = { url, createdBy: user, user: user };
             return file;
         });
         const insertedValue = await this.filesService.createFiles({
