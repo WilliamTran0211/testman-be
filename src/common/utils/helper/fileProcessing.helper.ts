@@ -1,6 +1,7 @@
 import { S3 } from 'aws-sdk';
+import { MagicNumber, WhiteList } from 'src/common/constants/file.constant';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
-import { FileSize, MagicNumber, WhiteList } from 'src/common/enums/file';
+import { FileSize } from 'src/common/enums/file.enum';
 
 interface IUploadFile {
     name: string;
@@ -18,12 +19,12 @@ export const uploadFile = async ({
     file,
     id,
     createdAtTimestamp,
-    isAvatar = false
+    fileStorage
 }: {
     file: IUploadFile;
     id: number;
     createdAtTimestamp: number;
-    isAvatar: boolean;
+    fileStorage: string;
 }): Promise<UploadS3Response> => {
     const s3 = new S3({
         accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
@@ -32,9 +33,7 @@ export const uploadFile = async ({
     const data = await s3
         .upload({
             Bucket:
-                `${process.env.AWS_S3_BUCKET_NAME}` +
-                `${isAvatar ? '/avatar' : '/test-case'}` +
-                `/${id}`,
+                `${process.env.AWS_S3_BUCKET_NAME}` + fileStorage + `/${id}`,
             Key: `${createdAtTimestamp.toString()}_${file.name}`,
             Body: file.data
         })
@@ -44,7 +43,11 @@ export const uploadFile = async ({
     };
 };
 
-export const getFile = async (id: number, key: string, isAvatar: boolean) => {
+export const getFile = async (
+    id: number,
+    key: string,
+    fileStorage: boolean
+) => {
     const s3 = new S3({
         accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_S3_SECRET_ACCESS_KEY
@@ -52,10 +55,7 @@ export const getFile = async (id: number, key: string, isAvatar: boolean) => {
     try {
         const gotFile = await s3
             .getObject({
-                Bucket:
-                    process.env.AWS_S3_BUCKET_NAME +
-                    `${isAvatar ? '/avatar' : '/test-case'}` +
-                    `/${id}`,
+                Bucket: process.env.AWS_S3_BUCKET_NAME + fileStorage + `/${id}`,
                 Key: `${key}`
             })
             .promise();
@@ -69,7 +69,7 @@ export const getFile = async (id: number, key: string, isAvatar: boolean) => {
 export const deleteFile = async (
     file: IGetFile,
     id: number,
-    isAvatar = false
+    fileStorage = false
 ) => {
     const s3 = new S3({
         accessKeyId: process.env.AWS_S3_ACCESS_KEY_ID,
@@ -78,9 +78,7 @@ export const deleteFile = async (
     try {
         await s3
             .deleteObject({
-                Bucket:
-                    process.env.AWS_S3_BUCKET_NAME +
-                    `${isAvatar ? '/avatar' : '/test-case'}`,
+                Bucket: process.env.AWS_S3_BUCKET_NAME + fileStorage,
                 Key: `${id.toString()}_${file.url}`
             })
             .promise();
@@ -108,21 +106,25 @@ export const validFileType = (file: Express.Multer.File): boolean => {
 
 export const validFileSize = (file: Express.Multer.File): boolean => {
     const size = file.size;
-    if (size < FileSize.min || size > FileSize.max) {
+    if (size < FileSize.MIN || size > FileSize.MAX) {
         return false;
     }
     return true;
 };
 
-export const uploadedFile = async ({
+export const uploadFileProcessor = async ({
     files,
     id,
-    isAvatar
+    fileStorage
 }: {
     files: Express.Multer.File[];
     id: number;
-    isAvatar: boolean;
-}) => {
+    fileStorage: string;
+}): Promise<{ urls?: string[]; error?: string }> => {
+    const checkResult = checkFileValid(files);
+    if (checkResult?.error) {
+        return checkResult;
+    }
     const uploadedFiles = [];
     for await (const file of files) {
         const uploadedFile = await uploadFile({
@@ -132,26 +134,11 @@ export const uploadedFile = async ({
             },
             id: Number(id ? id : 0),
             createdAtTimestamp: Number(Date.now()),
-            isAvatar
+            fileStorage
         });
         uploadedFiles.push(uploadedFile.url);
     }
-    return uploadedFiles;
-};
-export const uploadFileProcessor = async (
-    files,
-    id
-): Promise<{ urls?: string[]; error?: string }> => {
-    const checkResult = checkFileValid(files);
-    if (checkResult?.error) {
-        return checkResult;
-    }
-    const uploadedFileResponse = await uploadedFile({
-        files,
-        id,
-        isAvatar: true
-    });
-    return { urls: uploadedFileResponse, error: '' };
+    return { urls: uploadedFiles, error: '' };
 };
 
 export const checkFileValid = (

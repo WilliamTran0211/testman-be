@@ -4,7 +4,7 @@ import {
     USER_FIELD,
     USER_FIELD_WITH_PASSWORD,
     USER_FIELD_WITH_REFRESH_TOKEN
-} from 'src/common/contants/fields.contants';
+} from 'src/common/constants/fields.constant';
 import { STATUS } from 'src/common/enums/status';
 import { QueryOptions } from 'src/common/types/query.type';
 import { User } from 'src/entities/user.entity';

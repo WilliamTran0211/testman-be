@@ -38,6 +38,10 @@ export class User extends BaseWithCreatedEntityInfo {
     @JoinColumn({ name: 'avatar' })
     avatar: File;
 
+    @OneToMany(() => File, file => file.id)
+    @JoinColumn({ name: 'avatar' })
+    avatars: File[];
+
     @ManyToMany(() => Project, project => project.members)
     @JoinTable({
         name: 'project_member'

@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn
+} from 'typeorm';
 import { BaseWithCreatedEntityInfo } from './base.created.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class File extends BaseWithCreatedEntityInfo {
@@ -8,4 +15,8 @@ export class File extends BaseWithCreatedEntityInfo {
 
     @Column()
     url: string;
+
+    @ManyToOne(() => User, (user: User) => user.avatars)
+    @JoinColumn({ name: 'user' })
+    user: User;
 }
