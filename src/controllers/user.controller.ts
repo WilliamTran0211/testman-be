@@ -25,6 +25,7 @@ import {
 } from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import { errorMessage } from 'src/common/enums/errorMessage.enum';
+import { FileStorageDatabase } from 'src/common/enums/file.enum';
 import { jwtConstants } from 'src/common/enums/jwtConstants';
 import { ROLE } from 'src/common/enums/roles';
 import { successMessage } from 'src/common/enums/successMessage';
@@ -35,9 +36,10 @@ import {
     customSelectedFields,
     customSort,
     pagination,
-    search
+    search,
+    fileTypeFilter
 } from 'src/common/utils/helper/query.helper';
-import FindOneParams from 'src/dtos/params.dto';
+import { FindOneParams } from 'src/dtos/params.dto';
 import {
     CreateUserDTO,
     GetUserQueryDTO,
@@ -158,15 +160,36 @@ export class UsersController {
         @Body(new ValidationPipe({ transform: true }))
         body: UserBaseDTO
     ) {
-        const { fullName, avatarId, dayOfBirth, phoneNumber } = body;
+        const { fullName, avatarId, bannerId, dayOfBirth, phoneNumber } = body;
         const id = request.user.id;
-        const avatarInfo = await this.filesService.getById({ id: avatarId });
-        if (!avatarInfo) {
+        const typeUserAvatarFilter = fileTypeFilter({
+            type: FileStorageDatabase.USER_AVATAR,
+            id
+        });
+        const typeUserBannerFilter = fileTypeFilter({
+            type: FileStorageDatabase.USER_BANNER,
+            id
+        });
+        const avatarInfo = await this.filesService.getByIdAndType({
+            id: avatarId,
+            type: typeUserAvatarFilter
+        });
+        const bannerInfo = await this.filesService.getByIdAndType({
+            id: bannerId,
+            type: typeUserBannerFilter
+        });
+        if (!avatarInfo || !bannerInfo) {
             throw new BadRequestException(errorMessage.NOT_FOUND_FILE);
         }
         const updateInfo = await this.userService.update({
             id,
-            data: { fullName, dayOfBirth, phoneNumber, avatar: avatarInfo }
+            data: {
+                fullName,
+                dayOfBirth,
+                phoneNumber,
+                avatar: avatarInfo,
+                banner: bannerInfo
+            }
         });
         if (!updateInfo.affected) {
             throw new InternalServerErrorException(errorMessage.SERVER_ERROR);

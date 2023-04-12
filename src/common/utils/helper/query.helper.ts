@@ -5,6 +5,7 @@ import {
     USERS_FILED,
     USERS_SEARCH_FIELD
 } from '../../enums/fields.enum';
+import { FileStorageDatabase } from 'src/common/enums/file.enum';
 
 // search function: field search and search key
 export const search = ({
@@ -87,4 +88,16 @@ export const pagination = ({
         return paginationOptions;
     }
     return { offset: 0, limit: 0 };
+};
+
+export const fileTypeFilter = ({
+    type,
+    id
+}: {
+    type: FileStorageDatabase;
+    id: number;
+}) => {
+    const result = {};
+    result[type] = id;
+    return result;
 };
